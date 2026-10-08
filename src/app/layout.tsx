@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Web Summarizer — Understand any webpage, instantly",
+  title: "AI Web Summarizer - Understand any webpage, instantly",
   description: "Extract the important information from any webpage with AI. Clean, minimal, and fast.",
 };
 
