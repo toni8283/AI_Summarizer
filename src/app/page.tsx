@@ -96,7 +96,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col justify-between overflow-x-hidden">
+    <main className="relative min-h-screen flex flex-col justify-center items-center overflow-x-hidden px-4 py-12 sm:px-6 lg:px-8">
       {/* Deep atmospheric ambient blue gradients (matching the reference image) */}
       <div className="ambient-scene" aria-hidden="true">
         <div className="cloud-top-right" />
@@ -108,41 +108,12 @@ export default function Home() {
       {/* Subtle background grid with visible light blue lines */}
       <div className="bg-grid-pattern" aria-hidden="true" />
 
-      {/* Minimal Top Navigation Bar */}
-      <header className="relative z-10 w-full px-6 py-5 sm:px-10 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-blue-600 font-semibold tracking-tight text-lg select-none">
-          <svg
-            className="w-5 h-5 text-blue-600"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 2L2 7l10 5 10-5-10-5z" />
-            <path d="M2 17l10 5 10-5" />
-            <path d="M2 12l10 5 10-5" />
-          </svg>
-          <span className="text-slate-900 font-medium">summarizer</span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/70 backdrop-blur-md border border-blue-100 text-slate-600 shadow-sm">
-            Gemini 1.5 Flash
-          </span>
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50/80 border border-blue-200/60 text-blue-700">
-            Free Tier
-          </span>
-        </div>
-      </header>
-
       {/* Main Centered Content */}
-      <div className="relative z-10 w-full max-w-2xl mx-auto px-4 py-8 sm:py-12 flex flex-col items-center text-center my-auto">
-        {/* Subtle Announcement Pill (DeepSeek style) */}
+      <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center text-center my-auto">
+        {/* Subtle Announcement Pill */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-blue-100/90 text-[11px] sm:text-xs text-slate-600 shadow-sm mb-6 max-w-lg transition-all hover:border-blue-200">
           <span className="text-blue-500 font-medium">✦</span>
-          <span>AI Web Summarizer is active. Extract key insights & conclusions instantly.</span>
+          <span>Paste a webpage and let AI summarize it.</span>
         </div>
 
         {/* Large Elegant Heading */}
@@ -152,72 +123,57 @@ export default function Home() {
 
         {/* Muted Subtitle */}
         <p className="text-sm sm:text-base text-slate-500 max-w-md mx-auto mb-8 sm:mb-9 font-normal leading-relaxed">
-          Paste a webpage URL and let AI extract the important information for you.
+          Extract the important information from any webpage with AI.
         </p>
 
-        {/* Spacious URL Input Box with Very Round Corners (30px) & Flowing Gradient Border */}
+        {/* Spacious Clean URL Input Box with Very Round Corners (30px) */}
         <div className={`input-frame ${isLoading ? "is-loading" : ""}`}>
           <form
             onSubmit={(e) => handleSubmit(e)}
-            className="flex flex-col bg-white/92 backdrop-blur-xl rounded-[28px] p-3 sm:p-4 shadow-sm text-left"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-[28px] p-2 sm:p-2.5 sm:pl-5 gap-2 sm:gap-3 shadow-sm"
           >
             {/* Main Input Field */}
-            <div className="px-2 pt-1 pb-3">
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => {
-                  setUrl(e.target.value);
-                  if (error) setError(null);
-                }}
-                placeholder="Paste a webpage URL..."
-                disabled={isLoading}
-                className="w-full bg-transparent text-slate-900 text-base sm:text-lg placeholder-slate-400 outline-none disabled:opacity-70 disabled:cursor-not-allowed"
-              />
-            </div>
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => {
+                setUrl(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="Paste a webpage URL..."
+              disabled={isLoading}
+              className="flex-1 bg-white text-slate-900 text-base sm:text-lg placeholder-slate-400 outline-none border-none focus:outline-none focus:ring-0 px-2 py-2 sm:px-0 disabled:opacity-70 disabled:cursor-not-allowed"
+            />
 
-            {/* Bottom Controls Row inside the rounded box */}
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100/80 px-1">
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-600 border border-slate-200/60 select-none">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  AI Extract
-                </span>
-                <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50/60 text-blue-700 border border-blue-100 select-none">
-                  Key Takeaways
-                </span>
-              </div>
-
-              {/* Round Blue Submit Button */}
-              <button
-                type="submit"
-                disabled={isLoading || !url.trim()}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2 sm:py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-full transition-all shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed select-none min-w-[120px]"
-              >
-                {isLoading ? (
-                  <>
-                    <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Summarizing...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Summarize</span>
-                    <svg
-                      className="w-3.5 h-3.5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
-                  </>
-                )}
-              </button>
-            </div>
+            {/* Round Blue Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading || !url.trim()}
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-full transition-all shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed select-none min-w-[124px]"
+            >
+              {isLoading ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Summarizing...</span>
+                </>
+              ) : (
+                <>
+                  <span>Summarize</span>
+                  <svg
+                    className="w-3.5 h-3.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </>
+              )}
+            </button>
           </form>
         </div>
 
@@ -226,21 +182,21 @@ export default function Home() {
           <button
             type="button"
             onClick={() => handleSubmit(undefined, "https://deepseek.ai")}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/75 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/80 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
           >
             <span className="text-blue-500">✦</span> deepseek.ai
           </button>
           <button
             type="button"
             onClick={() => handleSubmit(undefined, "https://techcrunch.com")}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/75 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/80 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
           >
             <span className="text-blue-500">✦</span> techcrunch.com
           </button>
           <button
             type="button"
             onClick={() => handleSubmit(undefined, "https://en.wikipedia.org/wiki/Artificial_intelligence")}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/75 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/80 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
           >
             <span className="text-blue-500">✦</span> wikipedia.org
           </button>
@@ -294,7 +250,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white/92 backdrop-blur-xl border border-blue-100/80 rounded-[30px] p-6 sm:p-8 shadow-[0_12px_45px_-10px_rgba(59,130,246,0.08)]">
+            <div className="bg-white/95 backdrop-blur-xl border border-blue-100/80 rounded-[30px] p-6 sm:p-8 shadow-[0_12px_45px_-10px_rgba(59,130,246,0.08)]">
               {result.title && (
                 <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-3 leading-snug">
                   {result.title}
@@ -328,11 +284,6 @@ export default function Home() {
           </div>
         )}
       </div>
-
-      {/* Subtle Footer */}
-      <footer className="relative z-10 w-full px-6 py-4 text-center text-xs text-slate-400 select-none">
-        AI Web Summarizer • Built with Next.js & Google Gemini
-      </footer>
     </main>
   );
 }
