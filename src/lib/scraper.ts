@@ -6,8 +6,8 @@ export interface ScrapedContent {
   url: string;
 }
 
-const MAX_EXTRACTED_CHARACTERS = 14000;
-const FETCH_TIMEOUT_MS = 12000;
+const MAX_EXTRACTED_CHARACTERS = 45000;
+const FETCH_TIMEOUT_MS = 15000;
 
 /**
  * Validates whether the given string is a valid HTTP/HTTPS URL.

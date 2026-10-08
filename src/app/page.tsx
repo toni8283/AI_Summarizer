@@ -96,7 +96,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col justify-center items-center overflow-x-hidden px-4 py-12 sm:px-6 lg:px-8">
+    <main className="relative min-h-screen flex flex-col justify-between items-center overflow-x-hidden">
       {/* Deep atmospheric ambient blue gradients (matching the reference image) */}
       <div className="ambient-scene" aria-hidden="true">
         <div className="cloud-top-right" />
@@ -108,8 +108,28 @@ export default function Home() {
       {/* Subtle background grid with visible light blue lines */}
       <div className="bg-grid-pattern" aria-hidden="true" />
 
+      {/* Top Left AI Summarizer Logo */}
+      <header className="relative z-10 w-full px-6 py-5 sm:px-10 flex items-center justify-start">
+        <div className="flex items-center gap-2.5 text-blue-600 select-none">
+          <svg
+            className="w-5 h-5 text-blue-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+          </svg>
+          <span className="text-slate-900 font-semibold tracking-tight text-base sm:text-lg">AI Summarizer</span>
+        </div>
+      </header>
+
       {/* Main Centered Content */}
-      <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center text-center my-auto">
+      <div className="relative z-10 w-full max-w-2xl mx-auto px-4 py-6 sm:py-10 flex flex-col items-center text-center my-auto">
         {/* Subtle Announcement Pill */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-blue-100/90 text-[11px] sm:text-xs text-slate-600 shadow-sm mb-6 max-w-lg transition-all hover:border-blue-200">
           <span className="text-blue-500 font-medium">✦</span>

@@ -47,7 +47,7 @@ Please provide a concise, accurate summary following the instructions.`;
       systemInstruction: SYSTEM_PROMPT,
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: 800,
+        maxOutputTokens: 1500,
       },
     });
 
@@ -97,7 +97,7 @@ async function fallbackRestCall(apiKey: string, prompt: string): Promise<string>
       ],
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: 800,
+        maxOutputTokens: 1500,
       },
     }),
   });
