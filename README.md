@@ -228,3 +228,4 @@ Vercel will automatically build and deploy the Next.js application with zero add
 ## 13. License
 
 MIT License. Open source and free to use.
+

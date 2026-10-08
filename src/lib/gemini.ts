@@ -124,3 +124,4 @@ async function fallbackRestCall(apiKey: string, prompt: string): Promise<string>
 
   return candidateText.trim();
 }
+
