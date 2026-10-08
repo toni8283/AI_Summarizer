@@ -15,21 +15,21 @@ export default function Home() {
   const [result, setResult] = useState<SummaryResult | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const handleSubmit = async (e?: React.FormEvent) => {
+  const handleSubmit = async (e?: React.FormEvent, customUrl?: string) => {
     if (e) e.preventDefault();
 
-    const trimmed = url.trim();
-    if (!trimmed) {
+    const targetUrl = (customUrl || url).trim();
+    if (!targetUrl) {
       setError("Please enter a webpage URL.");
       return;
     }
 
     // Auto-prepend https:// if user omits protocol
-    let formattedUrl = trimmed;
+    let formattedUrl = targetUrl;
     if (!/^https?:\/\//i.test(formattedUrl)) {
       formattedUrl = `https://${formattedUrl}`;
-      setUrl(formattedUrl);
     }
+    setUrl(formattedUrl);
 
     setError(null);
     setIsLoading(true);
@@ -96,105 +96,205 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      {/* Background Grid (5-8% opacity) */}
+    <main className="relative min-h-screen flex flex-col justify-between overflow-x-hidden">
+      {/* Deep atmospheric ambient blue gradients (matching the reference image) */}
+      <div className="ambient-scene" aria-hidden="true">
+        <div className="cloud-top-right" />
+        <div className="cloud-mid-left" />
+        <div className="cloud-bottom-right" />
+        <div className="cloud-top-center" />
+      </div>
+
+      {/* Subtle background grid with visible light blue lines */}
       <div className="bg-grid-pattern" aria-hidden="true" />
 
-      {/* Ambient Diffused Blue Gradient Blobs */}
-      <div className="ambient-glow-top" aria-hidden="true" />
-      <div className="ambient-glow-left" aria-hidden="true" />
-      <div className="ambient-glow-right" aria-hidden="true" />
+      {/* Minimal Top Navigation Bar */}
+      <header className="relative z-10 w-full px-6 py-5 sm:px-10 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-blue-600 font-semibold tracking-tight text-lg select-none">
+          <svg
+            className="w-5 h-5 text-blue-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+          </svg>
+          <span className="text-slate-900 font-medium">summarizer</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/70 backdrop-blur-md border border-blue-100 text-slate-600 shadow-sm">
+            Gemini 1.5 Flash
+          </span>
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50/80 border border-blue-200/60 text-blue-700">
+            Free Tier
+          </span>
+        </div>
+      </header>
 
       {/* Main Centered Content */}
-      <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center text-center">
-        {/* Eyebrow text */}
-        <p className="text-[11px] sm:text-xs font-semibold tracking-wider text-slate-500 uppercase mb-3 select-none">
-          AI WEB SUMMARIZER
-        </p>
+      <div className="relative z-10 w-full max-w-2xl mx-auto px-4 py-8 sm:py-12 flex flex-col items-center text-center my-auto">
+        {/* Subtle Announcement Pill (DeepSeek style) */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-blue-100/90 text-[11px] sm:text-xs text-slate-600 shadow-sm mb-6 max-w-lg transition-all hover:border-blue-200">
+          <span className="text-blue-500 font-medium">✦</span>
+          <span>AI Web Summarizer is active. Extract key insights & conclusions instantly.</span>
+        </div>
 
-        {/* Heading */}
-        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-slate-900 leading-[1.18] mb-3">
+        {/* Large Elegant Heading */}
+        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight text-slate-900 leading-[1.18] mb-3">
           Understand any webpage, instantly.
         </h1>
 
-        {/* Subtitle */}
-        <p className="text-sm sm:text-base text-slate-500 max-w-md mx-auto mb-8 sm:mb-10 font-normal leading-relaxed">
+        {/* Muted Subtitle */}
+        <p className="text-sm sm:text-base text-slate-500 max-w-md mx-auto mb-8 sm:mb-9 font-normal leading-relaxed">
           Paste a webpage URL and let AI extract the important information for you.
         </p>
 
-        {/* URL Input Container with Animated Border */}
-        <div
-          className={`input-frame ${isLoading ? "is-loading" : ""}`}
-        >
+        {/* Spacious URL Input Box with Very Round Corners (30px) & Flowing Gradient Border */}
+        <div className={`input-frame ${isLoading ? "is-loading" : ""}`}>
           <form
-            onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white/90 backdrop-blur-md rounded-[18.5px] p-2 sm:p-2 sm:pl-5 gap-2 sm:gap-3"
+            onSubmit={(e) => handleSubmit(e)}
+            className="flex flex-col bg-white/92 backdrop-blur-xl rounded-[28px] p-3 sm:p-4 shadow-sm text-left"
           >
-            <input
-              type="text"
-              value={url}
-              onChange={(e) => {
-                setUrl(e.target.value);
-                if (error) setError(null);
-              }}
-              placeholder="Paste a webpage URL..."
-              disabled={isLoading}
-              className="flex-1 bg-transparent px-3 py-2 sm:px-0 text-slate-900 text-sm sm:text-base placeholder-slate-400 outline-none disabled:opacity-70 disabled:cursor-not-allowed"
-            />
-            <button
-              type="submit"
-              disabled={isLoading || !url.trim()}
-              className="inline-flex items-center justify-center px-5 py-2.5 sm:py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-[14px] transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed select-none min-w-[124px]"
-            >
-              {isLoading ? (
-                <span className="inline-flex items-center gap-2">
-                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Summarizing...</span>
+            {/* Main Input Field */}
+            <div className="px-2 pt-1 pb-3">
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => {
+                  setUrl(e.target.value);
+                  if (error) setError(null);
+                }}
+                placeholder="Paste a webpage URL..."
+                disabled={isLoading}
+                className="w-full bg-transparent text-slate-900 text-base sm:text-lg placeholder-slate-400 outline-none disabled:opacity-70 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            {/* Bottom Controls Row inside the rounded box */}
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100/80 px-1">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-600 border border-slate-200/60 select-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  AI Extract
                 </span>
-              ) : (
-                "Summarize"
-              )}
-            </button>
+                <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50/60 text-blue-700 border border-blue-100 select-none">
+                  Key Takeaways
+                </span>
+              </div>
+
+              {/* Round Blue Submit Button */}
+              <button
+                type="submit"
+                disabled={isLoading || !url.trim()}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2 sm:py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-full transition-all shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed select-none min-w-[120px]"
+              >
+                {isLoading ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Summarizing...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Summarize</span>
+                    <svg
+                      className="w-3.5 h-3.5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
+                    </svg>
+                  </>
+                )}
+              </button>
+            </div>
           </form>
         </div>
 
-        {/* Human-friendly Error Message */}
+        {/* Quick Testing Pills below the input (DeepSeek style) */}
+        <div className="flex items-center justify-center flex-wrap gap-2 mt-4 sm:mt-5">
+          <button
+            type="button"
+            onClick={() => handleSubmit(undefined, "https://deepseek.ai")}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/75 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
+          >
+            <span className="text-blue-500">✦</span> deepseek.ai
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSubmit(undefined, "https://techcrunch.com")}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/75 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
+          >
+            <span className="text-blue-500">✦</span> techcrunch.com
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSubmit(undefined, "https://en.wikipedia.org/wiki/Artificial_intelligence")}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/75 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
+          >
+            <span className="text-blue-500">✦</span> wikipedia.org
+          </button>
+        </div>
+
+        {/* Human-friendly Error Banner */}
         {error && (
-          <div className="mt-4 px-4 py-2 rounded-xl text-xs sm:text-sm text-rose-700 bg-rose-50/90 border border-rose-200/70 shadow-sm animate-fade-in">
+          <div className="mt-4 px-4 py-2.5 rounded-full text-xs sm:text-sm text-rose-700 bg-rose-50/90 border border-rose-200/80 shadow-sm animate-fade-in">
             {error}
           </div>
         )}
 
-        {/* Result Container */}
+        {/* Summary Result Card with Round Corners (30px) */}
         {result && (
           <div className="w-full mt-8 sm:mt-10 text-left animate-fade-in">
-            <div className="flex items-center justify-between mb-3 px-1">
+            <div className="flex items-center justify-between mb-3 px-2">
               <div className="flex items-center gap-2.5">
                 <h2 className="text-base sm:text-lg font-semibold text-slate-900">
                   Summary
                 </h2>
-                <span className="text-[11px] font-medium text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-full select-none">
+                <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2.5 py-0.5 rounded-full select-none">
                   Summary generated
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
                 {result.url && (
-                  <span className="hidden sm:inline-block text-xs text-slate-400 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/50 max-w-[180px] truncate">
+                  <span className="hidden sm:inline-block text-xs text-slate-500 bg-slate-100/90 px-2.5 py-0.5 rounded-full border border-slate-200/60 max-w-[180px] truncate">
                     {getDomain(result.url)}
                   </span>
                 )}
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="text-xs font-medium text-slate-500 hover:text-blue-600 transition-colors px-2 py-1 rounded hover:bg-slate-100/60 flex items-center gap-1"
+                  className="text-xs font-medium text-slate-600 hover:text-blue-600 transition-colors px-3 py-1 rounded-full bg-white/80 border border-slate-200/70 shadow-sm hover:border-blue-200 flex items-center gap-1.5"
                 >
-                  {copied ? "Copied" : "Copy"}
+                  <svg
+                    className="w-3.5 h-3.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                  </svg>
+                  <span>{copied ? "Copied" : "Copy"}</span>
                 </button>
               </div>
             </div>
 
-            <div className="bg-white/90 backdrop-blur-md border border-slate-200/70 rounded-[20px] p-6 sm:p-8 shadow-sm">
+            <div className="bg-white/92 backdrop-blur-xl border border-blue-100/80 rounded-[30px] p-6 sm:p-8 shadow-[0_12px_45px_-10px_rgba(59,130,246,0.08)]">
               {result.title && (
                 <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-3 leading-snug">
                   {result.title}
@@ -212,7 +312,7 @@ export default function Home() {
                     ))}
 
                     {bullets.length > 0 && (
-                      <ul className="space-y-2 pt-1">
+                      <ul className="space-y-2.5 pt-2">
                         {bullets.map((b, idx) => (
                           <li key={idx} className="flex items-start gap-2.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0 opacity-80" />
@@ -228,6 +328,11 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {/* Subtle Footer */}
+      <footer className="relative z-10 w-full px-6 py-4 text-center text-xs text-slate-400 select-none">
+        AI Web Summarizer • Built with Next.js & Google Gemini
+      </footer>
     </main>
   );
 }
