@@ -20,12 +20,13 @@ Rules:
 - Use plain text and markdown bullet points (- Item). Do not use excessive hashtags or markdown headers.`;
 
 /**
- * Summarizes scraped webpage content using Google's Gemini API (free tier).
+ * Summarizes scraped webpage content using Groq (Qwen/Llama) or Google Gemini (free tier).
+ * Automatically detects whether the provided key is a Groq key (gsk_...) or a Gemini key.
  */
 export async function summarizeWithGemini(params: SummarizeParams): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  const rawKey = (process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY)?.trim();
 
-  if (!apiKey) {
+  if (!rawKey) {
     throw new Error("MISSING_API_KEY");
   }
 
@@ -39,8 +40,86 @@ ${params.text}
 
 Please provide a concise, accurate summary following the instructions.`;
 
+  // Auto-detect Groq API key (starts with "gsk_")
+  if (rawKey.startsWith("gsk_") || process.env.GROQ_API_KEY) {
+    return summarizeWithGroq(rawKey, prompt);
+  }
+
+  // Otherwise, use Google Gemini
+  return summarizeWithGoogleGemini(rawKey, prompt);
+}
+
+/**
+ * High-speed inference using Groq API (free tier).
+ */
+async function summarizeWithGroq(apiKey: string, prompt: string): Promise<string> {
+  const modelsToTry = [
+    "qwen/qwen3.8-27b",
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
+    "openai/gpt-oss-120b",
+  ];
+
+  let lastError: Error | null = null;
+
+  for (const model of modelsToTry) {
+    try {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: prompt },
+          ],
+          temperature: 0.2,
+          max_tokens: 1500,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorJson = await res.json().catch(() => ({}));
+        const errMsg = errorJson.error?.message || `HTTP ${res.status}`;
+        if (res.status === 401) {
+          throw new Error("INVALID_API_KEY");
+        }
+        if (res.status === 429) {
+          throw new Error("RATE_LIMIT_EXCEEDED");
+        }
+        // If model not found or inactive, continue to next model in the list
+        if (res.status === 404 || errMsg.includes("does not exist")) {
+          lastError = new Error(`MODEL_NOT_FOUND_${model}`);
+          continue;
+        }
+        throw new Error(`GROQ_ERROR: ${errMsg}`);
+      }
+
+      const data = await res.json();
+      const content = data.choices?.[0]?.message?.content;
+      if (!content || content.trim().length === 0) {
+        continue;
+      }
+      return content.trim();
+    } catch (err: unknown) {
+      if (err instanceof Error && (err.message === "INVALID_API_KEY" || err.message === "RATE_LIMIT_EXCEEDED")) {
+        throw err;
+      }
+      lastError = err instanceof Error ? err : new Error(String(err));
+    }
+  }
+
+  throw lastError || new Error("GROQ_API_ERROR");
+}
+
+/**
+ * Summarization using Google Gemini SDK with direct REST API fallback.
+ */
+async function summarizeWithGoogleGemini(apiKey: string, prompt: string): Promise<string> {
   try {
-    // Attempt with @google/generative-ai SDK using gemini-1.5-flash (fast, highly capable, free tier)
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
@@ -61,9 +140,8 @@ Please provide a concise, accurate summary following the instructions.`;
 
     return summaryText.trim();
   } catch (sdkError: unknown) {
-    // Check if error is due to model name or SDK issue, try direct REST endpoint as fallback
     try {
-      return await fallbackRestCall(apiKey, prompt);
+      return await fallbackGeminiRestCall(apiKey, prompt);
     } catch {
       const errMsg = sdkError instanceof Error ? sdkError.message : String(sdkError);
       if (errMsg.includes("API_KEY_INVALID") || errMsg.includes("invalid API key")) {
@@ -78,9 +156,9 @@ Please provide a concise, accurate summary following the instructions.`;
 }
 
 /**
- * Direct REST API fallback to ensure uninterrupted service with latest Gemini models.
+ * Direct REST API fallback for Google Gemini.
  */
-async function fallbackRestCall(apiKey: string, prompt: string): Promise<string> {
+async function fallbackGeminiRestCall(apiKey: string, prompt: string): Promise<string> {
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
   const res = await fetch(endpoint, {
@@ -115,8 +193,7 @@ async function fallbackRestCall(apiKey: string, prompt: string): Promise<string>
   }
 
   const data = await res.json();
-  const candidateText =
-    data.candidates?.[0]?.content?.parts?.[0]?.text;
+  const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
   if (!candidateText) {
     throw new Error("EMPTY_REST_RESPONSE");
@@ -124,4 +201,3 @@ async function fallbackRestCall(apiKey: string, prompt: string): Promise<string>
 
   return candidateText.trim();
 }
-
