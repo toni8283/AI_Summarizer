@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+:root {
+  --bg-base: #f9fbfe;
+  --grid-line: rgba(71, 85, 105, 0.055);
+}
+
+html,
+body {
+  min-height: 100%;
+  background-color: var(--bg-base);
+  color: #0f172a;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle background grid with 5-8% opacity */
+.bg-grid-pattern {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* Soft ambient blue gradient blobs */
+.ambient-glow-top {
+  position: fixed;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 720px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(191, 219, 254, 0.5) 0%, rgba(224, 242, 254, 0.3) 60%, transparent 80%);
+  filter: blur(130px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow-left {
+  position: fixed;
+  top: 32%;
+  left: -8%;
+  width: 580px;
+  height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(219, 234, 254, 0.4) 0%, rgba(238, 242, 255, 0.25) 65%, transparent 80%);
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow-right {
+  position: fixed;
+  bottom: 8%;
+  right: -8%;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224, 231, 255, 0.4) 0%, rgba(224, 242, 254, 0.25) 65%, transparent 80%);
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* URL Input Outer Wrapper with Flowing Gradient Border on Loading */
+.input-frame {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  padding: 1.5px;
+  background: rgba(148, 163, 184, 0.26);
+  box-shadow: 
+    0 4px 20px -2px rgba(15, 23, 42, 0.04),
+    0 1px 4px 0 rgba(15, 23, 42, 0.02);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.input-frame:hover {
+  background: rgba(148, 163, 184, 0.4);
+  box-shadow: 
+    0 6px 26px -2px rgba(37, 99, 235, 0.06),
+    0 2px 8px 0 rgba(15, 23, 42, 0.03);
+}
+
+.input-frame:focus-within {
+  background: rgba(147, 197, 253, 0.65);
+  box-shadow: 
+    0 8px 30px -2px rgba(37, 99, 235, 0.09),
+    0 2px 8px 0 rgba(37, 99, 235, 0.04);
+}
+
+/* Loading animation keyframes */
+@keyframes flowingBorderAnimation {
+  0% {
+    --border-angle: 0deg;
+  }
+  100% {
+    --border-angle: 360deg;
+  }
+}
+
+.input-frame.is-loading {
+  padding: 2px;
+  background: conic-gradient(
+    from var(--border-angle),
+    rgba(147, 197, 253, 0.15) 0%,
+    rgba(96, 165, 250, 0.8) 25%,
+    rgba(59, 130, 246, 0.95) 45%,
+    rgba(168, 85, 247, 0.6) 65%,
+    rgba(147, 197, 253, 0.2) 85%,
+    rgba(147, 197, 253, 0.15) 100%
+  );
+  animation: flowingBorderAnimation 3.6s linear infinite;
+  box-shadow: 
+    0 10px 32px -4px rgba(59, 130, 246, 0.14),
+    0 0 20px 0 rgba(147, 197, 253, 0.18);
+}
