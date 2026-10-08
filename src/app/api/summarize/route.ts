@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             error:
-              "Gemini API key is not configured. Please add GEMINI_API_KEY to your server environment (.env.local).",
+              "API key is not configured. Please add your free GROQ_API_KEY or GEMINI_API_KEY to your server environment (.env.local).",
           },
           { status: 500 }
         );
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             error:
-              "The configured Gemini API key is invalid or unauthorized. Please verify your API key in AI Studio.",
+              "The configured API key is invalid or unauthorized. Please verify your API key in Groq Console or AI Studio.",
           },
           { status: 401 }
         );
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             error:
-              "Gemini API rate limit reached. Please wait a few moments and try again.",
+              "API rate limit reached. Please wait a few moments and try again.",
           },
           { status: 429 }
         );

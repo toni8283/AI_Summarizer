@@ -201,10 +201,10 @@ export default function Home() {
         <div className="flex items-center justify-center flex-wrap gap-2 mt-4 sm:mt-5">
           <button
             type="button"
-            onClick={() => handleSubmit(undefined, "https://deepseek.ai")}
+            onClick={() => handleSubmit(undefined, "https://ollama.com/")}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/80 backdrop-blur-md border border-slate-200/70 text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
           >
-            <span className="text-blue-500">✦</span> deepseek.ai
+            <span className="text-blue-500">✦</span> ollama.com
           </button>
           <button
             type="button"

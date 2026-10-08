@@ -16,14 +16,14 @@ Extract clear, accurate, and concise summaries from any webpage in seconds.
 
 - **Full-Stack Next.js (App Router)**: End-to-end type safety with TypeScript and server-side API routes.
 - **Cheerio HTML Extraction**: Removes navigation, headers, footers, scripts, styles, advertisements, and cookie modals to extract pure readable content.
-- **Google Gemini API (Free Tier)**: Uses `gemini-1.5-flash` for rapid, zero-cost, high-quality summaries.
+- **Google Gemini & Groq APIs (Free Tiers)**: Supports both Groq (`qwen/qwen3.8-27b`) for ultra-fast response and Google Gemini (`gemini-1.5-flash`) with automatic key detection.
 - **Server-Side Security**: API keys are strictly confined to the server runtime and never exposed to the client browser.
 - **Minimal, Calming UI**:
   - Full-screen soft light-blue/white background.
-  - Subtle background grid with 5–8% opacity.
-  - Soft, blurred ambient blue gradient blobs.
+  - Subtle background grid with visible light-blue lines.
+  - Soft, blurred ambient blue gradient blobs matching modern AI design.
   - Centered layout with generous whitespace.
-  - Single rounded input container (18–22px border radius).
+  - Single rounded input container (28–30px border radius).
   - Smooth animated flowing gradient border (blue, light blue, soft purple) that travels around the input while processing.
 - **Readable Summary Presentation**: Displays an overview paragraph followed by clean bullet points for key takeaways.
 - **One-Click Copy**: Easily copy the generated summary to your clipboard.
@@ -38,7 +38,7 @@ Extract clear, accurate, and concise summaries from any webpage in seconds.
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Scraping**: [Cheerio](https://cheerio.js.org/)
-- **AI Engine**: [Google Gemini API](https://aistudio.google.com/) (`@google/generative-ai` / `gemini-1.5-flash`)
+- **AI Engines**: [Groq API](https://console.groq.com/) & [Google Gemini API](https://aistudio.google.com/) (`@google/generative-ai` / `gemini-1.5-flash`)
 
 ---
 
